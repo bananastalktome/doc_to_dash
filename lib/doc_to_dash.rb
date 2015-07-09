@@ -52,7 +52,7 @@ module DocToDash
       if @methods && @classes
         load_methods_into_database
         load_classes_into_database
-
+        finalize_database
         log "Docset created."
         @docset_path
       else
@@ -123,8 +123,14 @@ module DocToDash
 
       @db = SQLite3::Database.new(@docset_path + '/Contents/Resources/docSet.dsidx')
       @db.execute('CREATE TABLE searchIndex(id INTEGER PRIMARY KEY, name TEXT, type TEXT, path TEXT)')
+      @db.execute('CREATE UNIQUE INDEX anchor ON searchIndex (name, type, path)')
     end
-
+    
+    def finalize_database
+      @db.execute('DROP INDEX anchor')
+      @db.execute('VACUUM searchIndex')
+    end
+    
     def load_methods_into_database
       log "Loading methods into database."
       insert_into_database @methods, 'Method'
@@ -136,7 +142,7 @@ module DocToDash
     end
 
     def insert_into_database(array, type)
-      array.each { |item| @db.execute("insert into searchIndex (name, type, path) VALUES(?, ?, ?)", item.last, type, @options[:doc_save_folder] + '/' + item.first) }
+      array.each { |item| @db.execute("insert or ignore into searchIndex (name, type, path) VALUES(?, ?, ?)", item.last, type, @options[:doc_save_folder] + '/' + item.first) }
     end
 
     def default_plist
