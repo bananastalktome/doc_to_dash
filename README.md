@@ -92,6 +92,14 @@ This will create a docset in doc/DefaultDocset.docset then you just need to load
         <td>Parser to use to pull out classes and modules.  DocToDash::YardParser / DocToDash::RdocDarkfishParser.</td>
         <td>Yes</td>
     </tr>
+    
+    <tr>
+        <td>:js_enabled</td>
+        <td>false</td>
+        <td>Whether Dash should allow Javascript on the documentation pages.</td>
+        <td>No</td>
+    </tr>
+   
 </table>
 
 ### Command Line

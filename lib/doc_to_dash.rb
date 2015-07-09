@@ -20,7 +20,8 @@ module DocToDash
           :doc_save_folder        => 'docs',                                                                              # This is the directory name it will store under /Contents/Resources/Documents/{this}
           :verbose                => true,
           :index_file             => nil,
-          :parser                 => DocToDash::YardParser
+          :parser                 => DocToDash::YardParser,
+          :js_enabled             => false
       }.merge(options)
 
       @docset_path    = File.expand_path(@options[:docset_output_path]) + '/' + @options[:docset_output_filename].call
@@ -155,12 +156,22 @@ module DocToDash
           <string>{DOCSET_NAME}</string>
           <key>isDashDocset</key>
           <true/>
+          #{js_enabled_plist_entry}
           #{index_key(index_file)}
         </dict>
         </plist>
       XML
     end
-
+    
+    def js_enabled_plist_entry
+      if @options[:js_enabled]
+        return <<-END_JS_ENABLED
+          <key>isJavaScriptEnabled</key>
+          <true/>
+        END_JS_ENABLED
+      end
+    end
+    
     def index_key(index_file)
       return '' if index_file.nil?
       return <<-END_INDEX_KEY
