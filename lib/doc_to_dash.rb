@@ -126,12 +126,12 @@ module DocToDash
 
     def load_methods_into_database
       log "Loading methods into database."
-      insert_into_database @methods, 'clm'
+      insert_into_database @methods, 'Method'
     end
 
     def load_classes_into_database
       log "Loading classes into database."
-      insert_into_database @classes, 'cl'
+      insert_into_database @classes, 'Class'
     end
 
     def insert_into_database(array, type)
