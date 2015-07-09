@@ -36,7 +36,7 @@ module DocToDash
 
         if item[3] == ""
           @classes << [item[2], item[0]]
-        elsif item[3] == "()"
+        elsif item[3] =~ /^\(/
           @methods << [item[2], "#{item[1]}##{item[0]}"]
         end
       end
